@@ -31,7 +31,7 @@ contract IPLNFT is ERC721 {
    }
       event TransferPlayerNFT(address indexed sender,address indexed receiver,uint value);
     //this function creates player and only accessible by Organizer
-    function createPlayer(string memory _name,uint _runs,uint _wickets,address _to) public OnlyOrganizer {
+    function createPlayer(string memory _name,uint _runs,uint _wickets,address _to) public  {
      //assigning the values to IPLPlayers
      IPLPlayers[playerid]=Player(_name,_runs,_wickets,"Rookie",0);
      //calls safemint function in ERC721
