@@ -4,7 +4,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 //importing ERC721 file from openzeppelin
 contract IPLNFT is ERC721 {
 
-    address public Organizer; //Organizer who creates player nfts 
+    address payable public Organizer; //Organizer who creates player nfts 
     
     struct Player{
         string name; //player name
@@ -20,28 +20,31 @@ contract IPLNFT is ERC721 {
     //index of player cards
     uint internal playerid=1001;
 
-    constructor() ERC721("IPL Cricket Cards","IPLNFT") {
+    constructor(address _organizer) ERC721("IPL Cricket Cards","IPLNFT") {
       //assigning the msg.sender address to Organizer
-      Organizer=msg.sender;
+      Organizer=payable(_organizer);
     }
      //creating modifier for accessing functions by only organizer
     modifier OnlyOrganizer() {
         require(Organizer==msg.sender);
         _;
    }
+   
       event TransferPlayerNFT(address indexed sender,address indexed receiver,uint value);
     //this function creates player and only accessible by Organizer
-    function createPlayer(string memory _name,uint _runs,uint _wickets,address _to) public  {
+    function createPlayer(string memory _name,uint _runs,uint _wickets) public OnlyOrganizer {
      //assigning the values to IPLPlayers
      IPLPlayers[playerid]=Player(_name,_runs,_wickets,"Rookie",0);
      //calls safemint function in ERC721
-     _safeMint(_to,playerid);
+     _safeMint(msg.sender,playerid);
      //Player id be incremented after every player creation
      playerid++;
 
    }
      //this function starts game between two playercards
-   function BeginGame(uint _attackerid,uint _defenderid) public {
+   function BeginGame(uint _attackerid,address _attackeraddr,uint _defenderid,address _defenderaddr) public OnlyOrganizer{
+   require(_attackeraddr==ownerOf(_attackerid),"Attacker owner and entered address mismatch");
+   require(_defenderaddr==ownerOf(_defenderid),"Defender owner and entered address mismatch");
     Player storage Player1 = IPLPlayers[_attackerid];
     Player storage Player2 = IPLPlayers[_defenderid];
 
@@ -72,21 +75,22 @@ contract IPLNFT is ERC721 {
         }
     }
     //this function allows to sets the  price and buy the player card,it only access by the owner of nft
-   function allowBuy(uint _playerid, uint _price) public {
-        require(msg.sender == ownerOf(_playerid), "You are not holding the Player card");
-        require(_price> 1 ether,"Price must be greater than 1 ether");
+   function allowBuy(uint _playerid,uint _price) public  {
+    _price=_price*10**18;
+    require(msg.sender == ownerOf(_playerid), "You are not holding the Player card");
+       require(_price>= 1 ether,"Price must be greater than 1 ether");
         PlayersPrice[_playerid] = _price;
     }
      //this function allows to disable the playercard to buy by changing price to zero
-    function disallowBuy(uint _playerid) public {
-        require(msg.sender == ownerOf(_playerid), "You are not holding the Player card");
+    function disallowBuy(uint _playerid) public  {
+    require(msg.sender == ownerOf(_playerid), "You are not holding the Player card");    
         PlayersPrice[_playerid] = 0;
     }
    //this function is to buy the playercard
    function buyPlayerCard(uint _playerid) payable public {
      //creating the variable called price so that it stores the price of playercard
         uint price = PlayersPrice[_playerid];
-        require(price > 0, "This token is not for sale");
+        require(price > 0, "This Playercard is not for sale");
         require(msg.value == price, "Incorrect value");
        //creating the variable called seller so that it stores the address of owner of playercard      
         address seller = ownerOf(_playerid);
@@ -96,8 +100,11 @@ contract IPLNFT is ERC721 {
         PlayersPrice[_playerid] = 0; 
         // send the ETH to the seller
       (bool sent,bytes memory data)=payable(seller).call{value:msg.value}(""); 
-        require (sent,"Failed to send ether");
+        require(sent,"Failed to send ether");
         //emits the event of who is selling and who is buying and the value of player card
         emit Transfer(seller, msg.sender, msg.value);
+    }
+    function getBalance(address _addr) public  view returns(uint){
+          return _addr.balance;
     }
 }
