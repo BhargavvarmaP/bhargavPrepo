@@ -43,6 +43,7 @@ contract IPLNFT is ERC721 {
    }
      //this function starts game between two playercards
    function BeginGame(uint _attackerid,address _attackeraddr,uint _defenderid,address _defenderaddr) public OnlyOrganizer{
+    require(_attackeraddr==address(0)&&_attackeraddr==address(0),"Entered zero address");
    require(_attackeraddr==ownerOf(_attackerid),"Attacker owner and entered address mismatch");
    require(_defenderaddr==ownerOf(_defenderid),"Defender owner and entered address mismatch");
     Player storage Player1 = IPLPlayers[_attackerid];
@@ -105,6 +106,11 @@ contract IPLNFT is ERC721 {
         emit Transfer(seller, msg.sender, msg.value);
     }
     function getBalance(address _addr) public  view returns(uint){
+        require(_addr==address(0),"Entered zero address");
           return _addr.balance;
+    }
+    function setOrganizer(address _addr) public OnlyOrganizer {
+        require(_addr==address(0),"Entered zero address");
+        Organizer=payable(_addr);
     }
 }
