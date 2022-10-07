@@ -100,7 +100,7 @@ contract IPLNFT is ERC721 {
         // it disallow the player card to buy after transfer,to allow it owner must call allow buy function
         PlayersPrice[_playerid] = 0; 
         // send the ETH to the seller
-      (bool sent,bytes memory data)=payable(seller).call{value:msg.value}(""); 
+      (bool sent,)=payable(seller).call{value:msg.value}(""); 
         require(sent,"Failed to send ether");
         //emits the event of who is selling and who is buying and the value of player card
         emit Transfer(seller, msg.sender, msg.value);

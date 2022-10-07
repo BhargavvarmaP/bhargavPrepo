@@ -71,7 +71,7 @@ contract Task1{
         require(total_pay<=address(this).balance,"Insufficient Funds");
         for(uint i=0;i<Payees;i++) {
            uint Pay = Payee_details[Payee_list[i]].Amount;
-           (bool sent,bytes memory data) = payable(Payee_list[i]).call{value:Pay}(""); //sends ether to Payees
+           (bool sent,) = payable(Payee_list[i]).call{value:Pay}(""); //sends ether to Payees
            require(sent,"Failed to send ether");
            emit TransferLog(Payer, Payee_list[i], Pay);
            Payee_details[Payee_list[i]].Balance+=Pay;//Balance of Payee be Updated here
@@ -80,7 +80,7 @@ contract Task1{
    //this function is to withdraw the balance amount from the contract and it can only accessible by Payer
    function WithdrawPayer() payable public OnlyPayer {
        require(address(this).balance>0,"No Funds Available");
-       (bool sent,bytes memory data) = Payer.call{value:address(this).balance}("");
+       (bool sent,) = Payer.call{value:address(this).balance}("");
        require(sent,"Failed to send ether");
    }
         // this function is to change the payer 
