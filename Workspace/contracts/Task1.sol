@@ -12,7 +12,7 @@ contract Task1{
     address[] public Payee_list; // storing all the address of Payees
     uint public Payees; // represents Number of Payees are there
     uint internal total_pay; //stores information about How much amount is actually pay to Payees
-
+    bool internal Entered=false; 
     event ReceivedToContractLog(address from,uint amount); 
     event NewPayerLog(address owner);
     event TransferLog(address indexed from,address indexed to,uint value);
@@ -23,6 +23,12 @@ contract Task1{
      //modifier declared that msg.sender must be the Payer
     modifier OnlyPayer() {
         require(Payer==msg.sender);
+        _;
+    }
+    //modifier declared that prevents the reentrancy attacks
+    modifier AvoidReentrancy(){
+        require(!Entered,"Reentrancy Detected");
+        Entered = true;
         _;
     }
       //recieve function is to get the ether from Payer 
@@ -64,7 +70,7 @@ contract Task1{
         }
     }
       //function is to transfer the amount of ether to Payees
-    function TransferPay() payable public OnlyPayer {
+    function TransferPay() payable public OnlyPayer AvoidReentrancy{
         
         require(Payees>0 && address(this).balance>0,"NO Funds available or No Payees listed");
         getTotalPay(); //calls the getTotalPay function so that totalpay will be updated
