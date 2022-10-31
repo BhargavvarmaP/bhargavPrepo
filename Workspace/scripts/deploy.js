@@ -3,12 +3,12 @@ const hre = require("hardhat");
 async function main() {
 
 
-  const IPLNFT = await hre.ethers.getContractFactory("IPLNFT");
-  const IPLnft = await IPLNFT.deploy();
+  const YeleboToken = await hre.ethers.getContractFactory("YeleboToken");
+  const Yelebotoken = await YeleboToken.deploy();
 
-  await IPLnft.deployed();
+  await Yelebotoken.deployed();
 
-  console.log("Deployed Address of NFT is : ",IPLnft.address);
+  console.log("Deployed Address of YeleboToken is : ",Yelebotoken.address);
 
 }
 main().catch((error) => {

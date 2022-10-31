@@ -13,6 +13,10 @@
     "hardhat": "^2.11.2"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.0"
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "browserify": "^17.0.0",
+    "FileReader": "^0.10.2",
+    "ipfs": "^0.65.0",
+    "ipfs-core": "^0.17.0"
   }
 }

@@ -12,7 +12,7 @@ module.exports = {
     },
     goerli: {
       url: "https://eth-goerli.g.alchemy.com/v2/eDxvdMpABSihT2SD2cISYdwz7pJ27fKe",
-      accounts: ['16160d12613270493d5a3e74e7aeef1dbc211bfc62b2c735e1440722b26f49a9']
+      accounts: ['0cf837e2ab1552a45de172c1231da8fc6bad1c25484dc4ecfabff5550f3b7afb']
     }
   },
   etherscan:{

@@ -2,7 +2,7 @@
 pragma solidity >=0.4.0 <0.9.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 //importing ERC721 file from openzeppelin
-contract IPLNFT is ERC721 {
+contract IPLPlay is ERC721 {
 
     address payable public Organizer; //Organizer who creates player nfts 
     

@@ -1,6 +1,6 @@
 //SPDX-License-Identifier:MIT
 pragma solidity >=0.4.0 <0.9.0;
-contract Task1{
+contract UniPay{
     address payable public Payer;  
     struct Payee {
         string Name; //Name of the Payee
